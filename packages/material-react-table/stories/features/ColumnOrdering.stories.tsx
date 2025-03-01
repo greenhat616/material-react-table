@@ -39,10 +39,10 @@ const columns: MRT_ColumnDef<(typeof data)[0]>[] = [
     header: 'State',
   },
   {
-    accessorKey: "phone",
-    header: "Phone",
+    accessorKey: 'phone',
+    header: 'Phone',
     enablePinning: false,
-  }
+  },
 ];
 
 const data = [...Array(100)].map(() => ({

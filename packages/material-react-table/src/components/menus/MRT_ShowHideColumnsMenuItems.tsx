@@ -86,11 +86,15 @@ export const MRT_ShowHideColumnsMenuItems = <TData extends MRT_RowData>({
     setIsDragging(false);
     setHoveredColumn(null);
     if (hoveredColumn) {
-      const reorderedColumns = reorderColumn(column, hoveredColumn, columnOrder);
+      const reorderedColumns = reorderColumn(
+        column,
+        hoveredColumn,
+        columnOrder,
+      );
       setColumnOrder(reorderedColumns);
       setColumnPinning(({ left = [], right = [] }) => ({
-        left: reorderedColumns.filter(header => left.includes(header)),
-        right: reorderedColumns.filter(header => right.includes(header)),
+        left: reorderedColumns.filter((header) => left.includes(header)),
+        right: reorderedColumns.filter((header) => right.includes(header)),
       }));
     }
   };

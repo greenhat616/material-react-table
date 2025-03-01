@@ -7,7 +7,9 @@ import {
   useRef,
   useState,
 } from 'react';
-import Autocomplete, { AutocompleteInputChangeReason } from '@mui/material/Autocomplete';
+import Autocomplete, {
+  AutocompleteInputChangeReason,
+} from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import Chip from '@mui/material/Chip';
@@ -144,13 +146,17 @@ export const MRT_FilterTextField = <TData extends MRT_RowData>({
         ? (column.getFilterValue() as [string, string])?.[
             rangeFilterIndex as number
           ] || ''
-        : isAutocompleteFilter 
-        ? typeof column.getFilterValue() === 'string' ? column.getFilterValue() as string : ''
-        : ((column.getFilterValue() as string) ?? ''),
+        : isAutocompleteFilter
+          ? typeof column.getFilterValue() === 'string'
+            ? (column.getFilterValue() as string)
+            : ''
+          : ((column.getFilterValue() as string) ?? ''),
   );
   const [autocompleteValue, setAutocompleteValue] =
-    useState<DropdownOption | null>(
-      () => isAutocompleteFilter ? ((column.getFilterValue() || null) as DropdownOption | null) : null,
+    useState<DropdownOption | null>(() =>
+      isAutocompleteFilter
+        ? ((column.getFilterValue() || null) as DropdownOption | null)
+        : null,
     );
 
   const handleChangeDebounced = useCallback(
@@ -187,8 +193,12 @@ export const MRT_FilterTextField = <TData extends MRT_RowData>({
     textFieldProps?.onChange?.(event);
   };
 
-  const handleAutocompleteInputChange = (_event: SyntheticEvent, newValue: string, _reason: AutocompleteInputChangeReason) => {
-    handleChange(newValue)
+  const handleAutocompleteInputChange = (
+    _event: SyntheticEvent,
+    newValue: string,
+    _reason: AutocompleteInputChangeReason,
+  ) => {
+    handleChange(newValue);
   };
 
   const handleAutocompleteChange = (newValue: DropdownOption | null) => {
@@ -208,8 +218,8 @@ export const MRT_FilterTextField = <TData extends MRT_RowData>({
         return newFilterValues;
       });
     } else if (isAutocompleteFilter) {
-      setAutocompleteValue(null)
-      setFilterValue('')
+      setAutocompleteValue(null);
+      setFilterValue('');
       // when using 'autocomplete' this function is called only inside effect and only if the filterValue === undefined
       // so the following call is excessive; should be uncommented if the handleClear becomes part of the Autocomplete component callbacks
       // column.setFilterValue(undefined)
@@ -343,8 +353,8 @@ export const MRT_FilterTextField = <TData extends MRT_RowData>({
         ...textFieldProps.slotProps?.formHelperText,
       },
       input: endAdornment //hack because mui looks for presence of endAdornment key instead of undefined
-        ? {endAdornment, startAdornment, ...textFieldProps.slotProps?.input}
-        : {startAdornment, ...textFieldProps.slotProps?.input},
+        ? { endAdornment, startAdornment, ...textFieldProps.slotProps?.input }
+        : { startAdornment, ...textFieldProps.slotProps?.input },
       htmlInput: {
         'aria-label': filterPlaceholder,
         autoComplete: 'off',
