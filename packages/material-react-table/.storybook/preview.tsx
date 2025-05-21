@@ -8,14 +8,15 @@ import Link from '@mui/material/Link';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { CssBaseline } from '@mui/material';
-
 const channel = addons.getChannel();
 
 const lightTheme = createTheme({
+  cssVariables: true,
   palette: { mode: 'light' },
 });
 
 const darkTheme = createTheme({
+  cssVariables: true,
   palette: { mode: 'dark' },
 });
 

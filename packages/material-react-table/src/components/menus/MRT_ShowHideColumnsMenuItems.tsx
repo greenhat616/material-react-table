@@ -122,7 +122,7 @@ export const MRT_ShowHideColumnsMenuItems = <TData extends MRT_RowData>({
           my: 0,
           opacity: isDragging ? 0.5 : 1,
           outline: isDragging
-            ? `2px dashed ${theme.palette.grey[500]}`
+            ? `2px dashed ${theme.vars?.palette.grey[500] || theme.palette.grey[500]}`
             : hoveredColumn?.id === column.id
               ? `2px dashed ${draggingBorderColor}`
               : 'none',

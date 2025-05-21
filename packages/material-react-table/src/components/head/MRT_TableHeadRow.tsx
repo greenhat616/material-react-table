@@ -10,6 +10,7 @@ import {
   type MRT_VirtualItem,
 } from '../../types';
 import { parseFromValuesOrFunc } from '../../utils/utils';
+import { colorMixAlpha } from '../../utils/style.utils';
 
 export interface MRT_TableHeadRowProps<TData extends MRT_RowData>
   extends TableRowProps {
@@ -28,7 +29,7 @@ export const MRT_TableHeadRow = <TData extends MRT_RowData>({
     options: {
       enableStickyHeader,
       layoutMode,
-      mrtTheme: { baseBackgroundColor },
+      mrtTheme: { baseBackgroundColor, baseBackgroundDarkColor },
       muiTableHeadRowProps,
     },
   } = table;
@@ -49,13 +50,20 @@ export const MRT_TableHeadRow = <TData extends MRT_RowData>({
       {...tableRowProps}
       sx={(theme) => ({
         backgroundColor: baseBackgroundColor,
-        boxShadow: `4px 0 8px ${alpha(theme.palette.common.black, 0.1)}`,
+        boxShadow: `4px 0 8px ${
+          theme.vars?.palette.common.black
+            ? colorMixAlpha(theme.vars.palette.common.black, 0.1)
+            : alpha(theme.palette.common.black, 0.1)
+        }`,
         display: layoutMode?.startsWith('grid') ? 'flex' : undefined,
         position:
           enableStickyHeader && layoutMode === 'semantic'
             ? 'sticky'
             : 'relative',
         top: 0,
+        ...theme.applyStyles('dark', {
+          backgroundColor: baseBackgroundDarkColor,
+        }),
         ...(parseFromValuesOrFunc(tableRowProps?.sx, theme) as any),
       })}
     >

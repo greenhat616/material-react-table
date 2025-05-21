@@ -49,7 +49,7 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
         VisibilityOffIcon,
       },
       localization,
-      mrtTheme: { menuBackgroundColor },
+      mrtTheme: { menuBackgroundColor, menuBackgroundDarkColor },
       renderColumnActionsMenuItems,
     },
     refs: { filterInputRefs },
@@ -320,10 +320,15 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
 
   return (
     <Menu
-      MenuListProps={{
-        dense: density === 'compact',
-        sx: {
-          backgroundColor: menuBackgroundColor,
+      slotProps={{
+        list: {
+          dense: density === 'compact',
+          sx: (theme) => ({
+            backgroundColor: menuBackgroundColor,
+            ...theme.applyStyles('dark', {
+              backgroundColor: menuBackgroundDarkColor,
+            }),
+          }),
         },
       }}
       anchorEl={anchorEl}

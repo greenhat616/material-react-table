@@ -66,12 +66,15 @@ export const MRT_TableFooter = <TData extends MRT_RowData>({
         display: layoutMode?.startsWith('grid') ? 'grid' : undefined,
         opacity: stickFooter ? 0.97 : undefined,
         outline: stickFooter
-          ? theme.palette.mode === 'light'
-            ? `1px solid ${theme.palette.grey[300]}`
-            : `1px solid ${theme.palette.grey[700]}`
+          ? `1px solid ${theme.vars?.palette.grey[300] || theme.palette.grey[300]}`
           : undefined,
         position: stickFooter ? 'sticky' : 'relative',
         zIndex: stickFooter ? 1 : undefined,
+        ...theme.applyStyles('dark', {
+          outline: stickFooter
+            ? `1px solid ${theme.vars?.palette.grey[700] || theme.palette.grey[700]}`
+            : undefined,
+        }),
         ...(parseFromValuesOrFunc(tableFooterProps?.sx, theme) as any),
       })}
     >

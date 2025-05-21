@@ -41,6 +41,7 @@ export const DefaultTheme = () => (
 
 export const CustomLightTheme = () => {
   const theme = createTheme({
+    cssVariables: true,
     palette: {
       background: {
         default: '#ffffef',
@@ -62,6 +63,7 @@ export const CustomLightTheme = () => {
 
 export const CustomDarkTheme = () => {
   const theme = createTheme({
+    cssVariables: true,
     palette: {
       mode: 'dark',
       primary: {

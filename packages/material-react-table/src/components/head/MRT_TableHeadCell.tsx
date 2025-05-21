@@ -111,7 +111,7 @@ export const MRT_TableHeadCell = <TData extends MRT_RowData>({
     const borderStyle = showResizeBorder
       ? `2px solid ${draggingBorderColor} !important`
       : draggingColumn?.id === column.id
-        ? `1px dashed ${theme.palette.grey[500]}`
+        ? `1px dashed ${theme.vars?.palette.grey[500] || theme.palette.grey[500]}`
         : hoveredColumn?.id === column.id
           ? `2px dashed ${draggingBorderColor}`
           : undefined;

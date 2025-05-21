@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import { alpha } from '@mui/material/styles';
 import { type MRT_RowData, type MRT_TableInstance } from '../../types';
 import { parseFromValuesOrFunc } from '../../utils/utils';
+import { colorMixAlpha } from '../../utils/style.utils';
 
 export interface MRT_ToolbarDropZoneProps<TData extends MRT_RowData>
   extends BoxProps {
@@ -54,11 +55,16 @@ export const MRT_ToolbarDropZone = <TData extends MRT_RowData>({
         sx={(theme) => ({
           alignItems: 'center',
           backdropFilter: 'blur(4px)',
-          backgroundColor: alpha(
-            theme.palette.info.main,
-            hoveredColumn?.id === 'drop-zone' ? 0.2 : 0.1,
-          ),
-          border: `dashed ${theme.palette.info.main} 2px`,
+          backgroundColor: theme.vars?.palette.info.main
+            ? colorMixAlpha(
+                theme.vars.palette.info.main,
+                hoveredColumn?.id === 'drop-zone' ? 0.2 : 0.1,
+              )
+            : alpha(
+                theme.palette.info.main,
+                hoveredColumn?.id === 'drop-zone' ? 0.2 : 0.1,
+              ),
+          border: `dashed ${theme.vars?.palette.info.main || theme.palette.info.main} 2px`,
           boxSizing: 'border-box',
           display: 'flex',
           height: '100%',

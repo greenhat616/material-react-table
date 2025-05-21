@@ -60,7 +60,7 @@ export const StyleAllMuiTableHeadCell = () => (
       sx: (theme) => ({
         background: 'rgba(52, 210, 235, 0.1)',
         borderRight: '1px solid rgba(224,224,224,1)',
-        color: theme.palette.text.primary,
+        color: theme.vars?.palette.text.primary || theme.palette.text.primary,
       }),
     }}
   />

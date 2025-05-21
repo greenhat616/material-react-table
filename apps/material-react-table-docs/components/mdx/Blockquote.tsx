@@ -1,10 +1,10 @@
-import { alpha, darken, useMediaQuery, useTheme } from '@mui/material';
+import { alpha, darken, useMediaQuery, useTheme, Box } from '@mui/material';
 
 export const Blockquote = (props) => {
   const theme = useTheme();
   const isMobile = useMediaQuery('(max-width: 720px)');
   return (
-    <blockquote
+    <Box component="blockquote"
       style={{
         borderLeft: `solid 8px ${alpha(
           darken(theme.palette.secondary.main, 0.2),

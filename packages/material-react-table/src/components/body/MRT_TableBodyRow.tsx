@@ -6,6 +6,7 @@ import {
   alpha,
   darken,
   lighten,
+  useColorScheme,
   useTheme,
 } from '@mui/material/styles';
 import { MRT_TableBodyCell, Memo_MRT_TableBodyCell } from './MRT_TableBodyCell';
@@ -21,6 +22,9 @@ import {
 } from '../../types';
 import { getIsRowSelected } from '../../utils/row.utils';
 import {
+  colorMixAlpha,
+  colorMixDarken,
+  colorMixLighten,
   commonCellBeforeAfterStyles,
   getCommonPinnedCellStyles,
 } from '../../utils/style.utils';
@@ -62,6 +66,7 @@ export const MRT_TableBodyRow = <TData extends MRT_RowData>({
       memoMode,
       mrtTheme: {
         baseBackgroundColor,
+        baseBackgroundDarkColor,
         pinnedRowBackgroundColor,
         selectedRowBackgroundColor,
       },
@@ -156,9 +161,21 @@ export const MRT_TableBodyRow = <TData extends MRT_RowData>({
     tableRowProps?.hover !== false
       ? isRowSelected
         ? cellHighlightColor
-        : theme.palette.mode === 'dark'
-          ? `${lighten(baseBackgroundColor, 0.3)}`
-          : `${darken(baseBackgroundColor, 0.3)}`
+        : `${
+            theme.vars
+              ? colorMixDarken(baseBackgroundColor, 0.3)
+              : darken(baseBackgroundColor, 0.3)
+          }`
+      : undefined;
+  const cellHighlightDarkColorHover =
+    tableRowProps?.hover !== false
+      ? isRowSelected
+        ? cellHighlightColor
+        : `${
+            theme.vars
+              ? colorMixLighten(baseBackgroundDarkColor, 0.3)
+              : lighten(baseBackgroundDarkColor, 0.3)
+          }`
       : undefined;
 
   return (
@@ -184,12 +201,20 @@ export const MRT_TableBodyRow = <TData extends MRT_RowData>({
           ...tableRowProps?.style,
         }}
         sx={(theme: Theme) => ({
-          '&:hover td:after': cellHighlightColorHover
-            ? {
-                backgroundColor: alpha(cellHighlightColorHover, 0.3),
-                ...commonCellBeforeAfterStyles,
-              }
-            : undefined,
+          '&:hover td:after':
+            cellHighlightColorHover && cellHighlightDarkColorHover
+              ? {
+                  backgroundColor: theme.vars
+                    ? colorMixAlpha(cellHighlightColorHover, 0.3)
+                    : alpha(cellHighlightColorHover, 0.3),
+                  ...commonCellBeforeAfterStyles,
+                  ...theme.applyStyles('dark', {
+                    backgroundColor: theme.vars
+                      ? colorMixAlpha(cellHighlightDarkColorHover, 0.3)
+                      : alpha(cellHighlightDarkColorHover, 0.3),
+                  }),
+                }
+              : undefined,
           backgroundColor: `${baseBackgroundColor} !important`,
           bottom:
             !virtualRow && bottomPinnedIndex !== undefined && isRowPinned

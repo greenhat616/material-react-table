@@ -124,7 +124,7 @@ export const MRT_TableBodyCell = <TData extends MRT_RowData>({
     const borderStyle = showResizeBorder
       ? `2px solid ${draggingBorderColor} !important`
       : isDraggingColumn || isDraggingRow
-        ? `1px dashed ${theme.palette.grey[500]} !important`
+        ? `1px dashed ${theme.vars?.palette.grey[500] || theme.palette.grey[500]} !important`
         : isHoveredColumn || isHoveredRow || isResizingColumn
           ? `2px dashed ${draggingBorderColor} !important`
           : undefined;
@@ -260,7 +260,7 @@ export const MRT_TableBodyCell = <TData extends MRT_RowData>({
             actionCell?.id === cell.id ||
             (editDisplayMode === 'cell' && isEditable) ||
             (editDisplayMode === 'table' && (isCreating || isEditing))
-              ? `1px solid ${theme.palette.grey[500]}`
+              ? `1px solid ${theme.vars?.palette.grey[500] || theme.palette.grey[500]}`
               : undefined,
           textOverflow: 'clip',
         },
@@ -272,7 +272,7 @@ export const MRT_TableBodyCell = <TData extends MRT_RowData>({
             : 'inherit',
         outline:
           actionCell?.id === cell.id
-            ? `1px solid ${theme.palette.grey[500]}`
+            ? `1px solid ${theme.vars?.palette.grey[500] || theme.palette.grey[500]}`
             : undefined,
         outlineOffset: '-1px',
         overflow: 'hidden',

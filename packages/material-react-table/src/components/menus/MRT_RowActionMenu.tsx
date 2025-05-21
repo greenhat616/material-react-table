@@ -34,7 +34,7 @@ export const MRT_RowActionMenu = <TData extends MRT_RowData>({
       enableEditing,
       icons: { EditIcon },
       localization,
-      mrtTheme: { menuBackgroundColor },
+      mrtTheme: { menuBackgroundColor, menuBackgroundDarkColor },
       renderRowActionMenuItems,
     },
   } = table;
@@ -67,10 +67,15 @@ export const MRT_RowActionMenu = <TData extends MRT_RowData>({
 
   return (
     <Menu
-      MenuListProps={{
-        dense: density === 'compact',
-        sx: {
-          backgroundColor: menuBackgroundColor,
+      slotProps={{
+        list: {
+          dense: density === 'compact',
+          sx: (theme) => ({
+            backgroundColor: menuBackgroundColor,
+            ...theme.applyStyles('dark', {
+              backgroundColor: menuBackgroundDarkColor,
+            }),
+          }),
         },
       }}
       anchorEl={anchorEl}

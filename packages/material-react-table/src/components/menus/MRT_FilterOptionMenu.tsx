@@ -129,7 +129,7 @@ export const MRT_FilterOptionMenu = <TData extends MRT_RowData>({
       columnFilterModeOptions,
       globalFilterModeOptions,
       localization,
-      mrtTheme: { menuBackgroundColor },
+      mrtTheme: { menuBackgroundColor, menuBackgroundDarkColor },
       renderColumnFilterModeMenuItems,
       renderGlobalFilterModeMenuItems,
     },
@@ -240,10 +240,15 @@ export const MRT_FilterOptionMenu = <TData extends MRT_RowData>({
 
   return (
     <Menu
-      MenuListProps={{
-        dense: density === 'compact',
-        sx: {
-          backgroundColor: menuBackgroundColor,
+      slotProps={{
+        list: {
+          dense: density === 'compact',
+          sx: (theme) => ({
+            backgroundColor: menuBackgroundColor,
+            ...theme.applyStyles('dark', {
+              backgroundColor: menuBackgroundDarkColor,
+            }),
+          }),
         },
       }}
       anchorEl={anchorEl}

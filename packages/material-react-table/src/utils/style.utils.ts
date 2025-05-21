@@ -9,7 +9,7 @@ import {
   type MRT_RowData,
   type MRT_TableInstance,
   type MRT_TableOptions,
-  type MRT_Theme,
+  type MRT_ThemeWithColorSchema,
 } from '../types';
 import { parseFromValuesOrFunc } from './utils';
 
@@ -18,24 +18,42 @@ export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');
 export const getMRTTheme = <TData extends MRT_RowData>(
   mrtTheme: MRT_TableOptions<TData>['mrtTheme'],
   muiTheme: Theme,
-): MRT_Theme => {
+): MRT_ThemeWithColorSchema => {
   const mrtThemeOverrides = parseFromValuesOrFunc(mrtTheme, muiTheme);
   const baseBackgroundColor =
     mrtThemeOverrides?.baseBackgroundColor ??
-    (muiTheme.palette.mode === 'dark'
-      ? lighten(muiTheme.palette.background.default, 0.05)
-      : muiTheme.palette.background.default);
+    (muiTheme.vars?.palette.background.default
+      ? colorMixLighten(muiTheme.vars?.palette.background.default, 0.05)
+      : lighten(muiTheme.palette.background.default, 0.05));
+  const baseBackgroundDarkColor =
+    mrtThemeOverrides?.baseBackgroundColor ??
+    (muiTheme.vars?.palette.background.default ||
+      muiTheme.palette.background.default);
   return {
     baseBackgroundColor,
-    cellNavigationOutlineColor: muiTheme.palette.primary.main,
-    draggingBorderColor: muiTheme.palette.primary.main,
-    matchHighlightColor:
-      muiTheme.palette.mode === 'dark'
-        ? darken(muiTheme.palette.warning.dark, 0.25)
-        : lighten(muiTheme.palette.warning.light, 0.5),
-    menuBackgroundColor: lighten(baseBackgroundColor, 0.07),
-    pinnedRowBackgroundColor: alpha(muiTheme.palette.primary.main, 0.1),
-    selectedRowBackgroundColor: alpha(muiTheme.palette.primary.main, 0.2),
+    baseBackgroundDarkColor,
+    cellNavigationOutlineColor:
+      muiTheme.vars?.palette.primary.main || muiTheme.palette.primary.main,
+    draggingBorderColor:
+      muiTheme.vars?.palette.primary.main || muiTheme.palette.primary.main,
+    matchHighlightColor: muiTheme.vars?.palette.warning.light
+      ? colorMixLighten(muiTheme.vars?.palette.warning.light, 0.5)
+      : lighten(muiTheme.palette.warning.light, 0.5),
+    matchHighlightDarkColor: muiTheme.vars?.palette.warning.dark
+      ? colorMixDarken(muiTheme.vars.palette.warning.dark, 0.25)
+      : darken(muiTheme.palette.warning.dark, 0.25),
+    menuBackgroundColor: muiTheme.vars
+      ? colorMixLighten(baseBackgroundColor, 0.07)
+      : lighten(baseBackgroundColor, 0.07),
+    menuBackgroundDarkColor: muiTheme.vars
+      ? colorMixLighten(baseBackgroundDarkColor, 0.07)
+      : lighten(baseBackgroundDarkColor, 0.07),
+    pinnedRowBackgroundColor: muiTheme.vars
+      ? colorMixAlpha(muiTheme.vars.palette.primary.main, 0.1)
+      : alpha(muiTheme.palette.primary.main, 0.1),
+    selectedRowBackgroundColor: muiTheme.vars
+      ? colorMixAlpha(muiTheme.vars.palette.primary.main, 0.2)
+      : alpha(muiTheme.palette.primary.main, 0.2),
     ...mrtThemeOverrides,
   };
 };
@@ -65,20 +83,29 @@ export const getCommonPinnedCellStyles = <TData extends MRT_RowData>({
   return {
     '&[data-pinned="true"]': {
       '&:before': {
-        backgroundColor: alpha(
-          darken(
-            baseBackgroundColor,
-            theme.palette.mode === 'dark' ? 0.05 : 0.01,
-          ),
-          0.97,
-        ),
+        backgroundColor: theme.vars
+          ? colorMixAlpha(colorMixDarken(baseBackgroundColor, 0.01), 0.97)
+          : alpha(darken(baseBackgroundColor, 0.01), 0.97),
         boxShadow: column
           ? isPinned === 'left' && column.getIsLastColumn(isPinned)
-            ? `-4px 0 4px -4px ${alpha(theme.palette.grey[700], 0.5)} inset`
+            ? `-4px 0 4px -4px ${
+                theme.vars
+                  ? colorMixAlpha(theme.vars.palette.grey[700], 0.5)
+                  : alpha(theme.palette.grey[700], 0.5)
+              } inset`
             : isPinned === 'right' && column.getIsFirstColumn(isPinned)
-              ? `4px 0 4px -4px ${alpha(theme.palette.grey[700], 0.5)} inset`
+              ? `4px 0 4px -4px ${
+                  theme.vars
+                    ? colorMixAlpha(theme.vars.palette.grey[700], 0.5)
+                    : alpha(theme.palette.grey[700], 0.5)
+                } inset`
               : undefined
           : undefined,
+        ...theme.applyStyles('dark', {
+          backgroundColor: theme.vars
+            ? colorMixAlpha(colorMixDarken(baseBackgroundColor, 0.05), 0.97)
+            : alpha(darken(baseBackgroundColor, 0.05), 0.97),
+        }),
         ...commonCellBeforeAfterStyles,
       },
     },
@@ -211,3 +238,33 @@ export const getCommonTooltipProps = (
   enterNextDelay: 1000,
   placement,
 });
+
+/**
+ * Use css color-mix to mix a color with transparent, aka, alpha
+ * @param color - color string, including css variable
+ * @param alpha - alpha channel 0-1
+ * @returns color-mix calls
+ */
+export const colorMixAlpha = (color: string, alpha: number): string => {
+  return `color-mix(in srgb, ${color} ${(alpha * 100).toFixed(2)}%, transparent ${((1 - alpha) * 100).toFixed(2)}%)`;
+};
+
+/**
+ * Use css color-mix to mix a color with white, aka, lighten
+ * @param color - color string, including css variable
+ * @param channel - 0-1
+ * @returns color-mix calls
+ */
+export const colorMixLighten = (color: string, channel: number) => {
+  return `color-mix(in lch, ${color} ${((1 - channel) * 100).toFixed(2)}%, white ${(channel * 100).toFixed(2)}%)`;
+};
+
+/**
+ * Use css color-mix to mix a color with black, aka, darken
+ * @param color - color string, including css variable
+ * @param channel - 0-1
+ * @returns color-mix calls
+ */
+export const colorMixDarken = (color: string, channel: number) => {
+  return `color-mix(in lch, ${color} ${((1 - channel) * 100).toFixed(2)}%, black ${(channel * 100).toFixed(2)}%)`;
+};

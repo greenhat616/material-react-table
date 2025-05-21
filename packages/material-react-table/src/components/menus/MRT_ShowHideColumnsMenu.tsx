@@ -41,7 +41,7 @@ export const MRT_ShowHideColumnsMenu = <TData extends MRT_RowData>({
       enableColumnPinning,
       enableHiding,
       localization,
-      mrtTheme: { menuBackgroundColor },
+      mrtTheme: { menuBackgroundColor, menuBackgroundDarkColor },
     },
   } = table;
   const { columnOrder, columnPinning, density } = getState();
@@ -96,10 +96,15 @@ export const MRT_ShowHideColumnsMenu = <TData extends MRT_RowData>({
 
   return (
     <Menu
-      MenuListProps={{
-        dense: density === 'compact',
-        sx: {
-          backgroundColor: menuBackgroundColor,
+      slotProps={{
+        list: {
+          dense: density === 'compact',
+          sx: (theme) => ({
+            backgroundColor: menuBackgroundColor,
+            ...theme.applyStyles('dark', {
+              backgroundColor: menuBackgroundDarkColor,
+            }),
+          }),
         },
       }}
       anchorEl={anchorEl}

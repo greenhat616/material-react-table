@@ -6,7 +6,7 @@ import { MRT_TablePagination } from './MRT_TablePagination';
 import { MRT_ToolbarAlertBanner } from './MRT_ToolbarAlertBanner';
 import { MRT_ToolbarDropZone } from './MRT_ToolbarDropZone';
 import { type MRT_RowData, type MRT_TableInstance } from '../../types';
-import { getCommonToolbarStyles } from '../../utils/style.utils';
+import { colorMixAlpha, getCommonToolbarStyles } from '../../utils/style.utils';
 import { parseFromValuesOrFunc } from '../../utils/utils';
 
 export interface MRT_BottomToolbarProps<TData extends MRT_RowData>
@@ -56,10 +56,11 @@ export const MRT_BottomToolbar = <TData extends MRT_RowData>({
       sx={(theme) => ({
         ...getCommonToolbarStyles({ table, theme }),
         bottom: isFullScreen ? '0' : undefined,
-        boxShadow: `0 1px 2px -1px ${alpha(
-          theme.palette.grey[700],
-          0.5,
-        )} inset`,
+        boxShadow: `0 1px 2px -1px ${
+          theme.vars?.palette.grey[700]
+            ? colorMixAlpha(theme.vars.palette.grey[700], 0.5)
+            : alpha(theme.palette.grey[700], 0.5)
+        } inset`,
         left: 0,
         position: isFullScreen ? 'fixed' : 'relative',
         right: 0,

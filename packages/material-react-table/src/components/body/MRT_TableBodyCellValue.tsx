@@ -28,7 +28,7 @@ export const MRT_TableBodyCellValue = <TData extends MRT_RowData>({
     getState,
     options: {
       enableFilterMatchHighlighting,
-      mrtTheme: { matchHighlightColor },
+      mrtTheme: { matchHighlightColor, matchHighlightDarkColor },
     },
   } = table;
   const { column, row } = cell;
@@ -93,15 +93,20 @@ export const MRT_TableBodyCellValue = <TData extends MRT_RowData>({
               key={key}
               sx={
                 match
-                  ? {
+                  ? (theme) => ({
                       backgroundColor: matchHighlightColor,
                       borderRadius: '2px',
-                      color: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? theme.palette.common.white
-                          : theme.palette.common.black,
+                      color:
+                        theme.vars?.palette.common.white ||
+                        theme.palette.common.white,
                       padding: '2px 1px',
-                    }
+                      ...theme.applyStyles('dark', {
+                        color:
+                          theme.vars?.palette.common.black ||
+                          theme.palette.common.black,
+                        backgroundColor: matchHighlightDarkColor,
+                      }),
+                    })
                   : undefined
               }
             >

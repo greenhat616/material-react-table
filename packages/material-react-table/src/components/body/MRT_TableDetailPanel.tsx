@@ -35,7 +35,7 @@ export const MRT_TableDetailPanel = <TData extends MRT_RowData>({
     getVisibleLeafColumns,
     options: {
       layoutMode,
-      mrtTheme: { baseBackgroundColor },
+      mrtTheme: { baseBackgroundColor, baseBackgroundDarkColor },
       muiDetailPanelProps,
       muiTableBodyRowProps,
       renderDetailPanel,
@@ -94,6 +94,9 @@ export const MRT_TableDetailPanel = <TData extends MRT_RowData>({
           py: !!DetailPanel && row.getIsExpanded() ? '1rem' : 0,
           transition: !virtualRow ? 'all 150ms ease-in-out' : undefined,
           width: `100%`,
+          ...theme.applyStyles('dark', {
+            backgroundColor: virtualRow ? baseBackgroundDarkColor : undefined,
+          }),
           ...(parseFromValuesOrFunc(tableCellProps?.sx, theme) as any),
         })}
       >

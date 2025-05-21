@@ -255,6 +255,12 @@ export interface MRT_Theme {
   selectedRowBackgroundColor: string;
 }
 
+export interface MRT_ThemeWithColorSchema extends MRT_Theme {
+  baseBackgroundDarkColor: string;
+  matchHighlightDarkColor: string;
+  menuBackgroundDarkColor: string;
+}
+
 export interface MRT_RowModel<TData extends MRT_RowData> {
   flatRows: MRT_Row<TData>[];
   rows: MRT_Row<TData>[];
@@ -346,7 +352,7 @@ export type MRT_DefinedTableOptions<TData extends MRT_RowData> = Omit<
 > & {
   icons: MRT_Icons;
   localization: MRT_Localization;
-  mrtTheme: Required<MRT_Theme>;
+  mrtTheme: Required<MRT_ThemeWithColorSchema>;
 };
 
 export type MRT_StatefulTableOptions<TData extends MRT_RowData> =

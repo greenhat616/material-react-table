@@ -3,6 +3,7 @@ import { MRT_ActionMenuItem } from './MRT_ActionMenuItem';
 import { type MRT_RowData, type MRT_TableInstance } from '../../types';
 import { openEditingCell } from '../../utils/cell.utils';
 import { parseFromValuesOrFunc } from '../../utils/utils';
+import { open } from 'fs';
 
 export interface MRT_CellActionMenuProps<TData extends MRT_RowData>
   extends Partial<MenuProps> {
@@ -21,7 +22,7 @@ export const MRT_CellActionMenu = <TData extends MRT_RowData>({
       enableEditing,
       icons: { ContentCopy, EditIcon },
       localization,
-      mrtTheme: { menuBackgroundColor },
+      mrtTheme: { menuBackgroundColor, menuBackgroundDarkColor },
       renderCellActionMenuItems,
     },
     refs: { actionCellRef },
@@ -84,10 +85,15 @@ export const MRT_CellActionMenu = <TData extends MRT_RowData>({
   return (
     (!!menuItems?.length || !!internalMenuItems?.length) && (
       <Menu
-        MenuListProps={{
-          dense: density === 'compact',
-          sx: {
-            backgroundColor: menuBackgroundColor,
+        slotProps={{
+          list: {
+            dense: density === 'compact',
+            sx: (theme) => ({
+              backgroundColor: menuBackgroundColor,
+              ...theme.applyStyles('dark', {
+                backgroundColor: menuBackgroundDarkColor,
+              }),
+            }),
           },
         }}
         anchorEl={actionCellRef.current}
