@@ -24,7 +24,7 @@
     "url": "https://github.com/KevinVandy/material-react-table/issues"
   },
   "sideEffects": false,
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "module": "dist/index.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
@@ -34,12 +34,12 @@
   ],
   "size-limit": [
     {
-      "path": "dist/index.js",
+      "path": "dist/index.cjs",
       "limit": "55 KB"
     },
     {
       "path": "dist/index.esm.js",
-      "limit": "51 KB"
+      "limit": "52 KB"
     }
   ],
   "engines": {

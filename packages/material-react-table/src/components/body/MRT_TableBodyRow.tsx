@@ -6,7 +6,6 @@ import {
   alpha,
   darken,
   lighten,
-  useColorScheme,
   useTheme,
 } from '@mui/material/styles';
 import { MRT_TableBodyCell, Memo_MRT_TableBodyCell } from './MRT_TableBodyCell';
